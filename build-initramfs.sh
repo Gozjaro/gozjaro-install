@@ -6,6 +6,12 @@
 # `modprobe -D` output into the module-copy loop without a temp file. The
 # target always ships bash (it is the /init interpreter).
 #
+# The need_bins / module list / /init below mirror gozjaro-bootstrap's
+# stages/85-initramfs.sh VERBATIM (the 19 binaries, the 6 sbin-routed names,
+# the dual-mode /init) — keep the two in sync when one changes. gzip/ldd/
+# readlink are NOT staged: the builder runs inside the target chroot, so it
+# uses the target's own tools for packing; only /init's runtime set goes in.
+#
 # Installed to /usr/sbin/gozjaro-build-initramfs by stage 77; invoked by the
 # installer (chroot) before GRUB install. This is the self-bootstrap step the
 # live ISO's host-side cpio handoff used to paper over: the target lays its
