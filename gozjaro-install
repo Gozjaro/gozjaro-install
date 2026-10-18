@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+# gozjaro-install — entry shim installed to /usr/bin by stage 77.
+#
+# Layout on the installed/live system:
+#   /usr/bin/gozjaro-install                (this file)
+#   /usr/share/gozjaro-install/lib/         (disks.py, actions.py)
+#   /usr/share/gozjaro-install/tui.py      (curses front-end)
+#   /usr/share/gozjaro-install/text.py     (plain-text fallback)
+#   /usr/sbin/gozjaro-build-initramfs       (chroot initramfs builder)
+#
+# curses is preferred; when it is unavailable (no ncursesw / dumb terminal)
+# the text front-end takes over so a degraded install is still possible.
+
+import importlib
+import os
+import sys
+
+_ROOT = os.path.dirname(os.path.realpath(__file__))
+_PKG = os.environ.get("GOZJARO_INSTALL_DIR", "/usr/share/gozjaro-install")
+for p in (_PKG, _ROOT):
+    if os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
+
+
+def _front_end():
+    try:
+        return importlib.import_module("tui")
+    except Exception:
+        return importlib.import_module("text")
+
+
+def main(argv):
+    fe = _front_end()
+    if fe is not None and hasattr(fe, "main"):
+        return fe.main()
+    return fe.run()
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
