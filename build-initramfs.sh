@@ -18,7 +18,7 @@
 # own egg with its own tools.
 #
 # Usage (inside the target's chroot, /proc /sys /dev /run bound):
-#   gozjaro-build-initramfs <kernel-version>     e.g. 7.1.8-gozjaro
+#   gozjaro-build-initramfs <kernel-version>     e.g. 7.1.8
 #
 # Produces: /boot/initrd-<kver>.img   (gzip cpio newc)
 #
@@ -253,7 +253,7 @@ INIT
 chmod 755 "$STAGING/init"
 
 # --- pack -----------------------------------------------------------------------
-out="/boot/initrd-$KVER-gozjaro.img"
+out="/boot/initrd-$KVER.img"
 mkdir -p /boot
 ( cd "$STAGING" && find . -print0 | cpio --null --create --format=newc ) |
     gzip -9 > "$out"
