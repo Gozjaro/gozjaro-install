@@ -56,7 +56,7 @@ mkdir -p "$STAGING"/{bin,sbin,lib,lib64,etc,proc,sys,dev,run,newroot}
 ln -s bin "$STAGING/usr" 2>/dev/null || true   # merged-usr trick inside the ramfs
 
 # --- binaries ----------------------------------------------------------------
-need_bins="bash mount umount mkdir sleep cat ls echo ln cp mv rm sed grep
+need_bins="seq bash mount umount mkdir sleep cat ls echo ln cp mv rm sed grep
           findmnt blkid switch_root modprobe insmod losetup kmod gzip ldd
           readlink install tar"
 
