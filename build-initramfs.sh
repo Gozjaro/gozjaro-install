@@ -131,6 +131,13 @@ cat > "$STAGING/init" <<'INIT'
 #   Disk:     root=UUID=<uuid> | root=/dev/<dev>
 # No set -e: one failed command must not kill PID 1.
 
+# Standard PATH for the whole boot: the kernel no longer seeds PATH into the
+# init environment (HOME=/ and TERM=linux only), and switch_root passes our
+# environment to /sbin/init. Without an exported PATH, PID 1 (systemd) has
+# none, and every unit with a bare ExecStart (e.g. modprobe@.service's
+# `modprobe -abq %i`) fails with "Unable to locate executable".
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 rescue() {
     echo "[gozjaro-initramfs] FAIL: $*"
     echo "[gozjaro-initramfs] last error: $*" > /dev/kmsg 2>/dev/null
